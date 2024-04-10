@@ -4,6 +4,8 @@ using GameStore.Api.Dtos;
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+const string GetGameEndpointName = "GetGame";
+
 //declare a list that will hold the data from Dtos
 List<GameDto> gameStores = [
     new GameDto(1, "Call Of Duty", "Combat", 59.99M, new DateOnly(1995,5,19)),
@@ -14,6 +16,48 @@ List<GameDto> gameStores = [
     new GameDto(6, "Cyberpunk 2077", "Action RPG", 59.99M, new DateOnly(2020,12,10))
 ];
 
-app.MapGet("/", () => gameStores);
+//api to handle endpoint displaying games
+app.MapGet("/games", () => gameStores);
+
+//get games by id
+app.MapGet("/games/{id}", (int id) => gameStores.Find(game => game.Id == id )).WithName(GetGameEndpointName);
+
+// POST / creating a game and added to the list of Dtos
+app.MapPost("/create", (CreateGameDto newGame) => {
+    GameDto game = new(
+        gameStores.Count+1,
+        newGame.Name,
+        newGame.Genre,
+        newGame.Price,
+        newGame.ReleaseDate
+    );
+
+    //add the new game to the list
+    gameStores.Add(game);
+
+    //standard response 200
+    return Results.CreatedAtRoute(GetGameEndpointName, new {id = game.Id}, game);
+});
+
+// PUT - games
+app.MapPut("/games/update/{id}", (int id, UpdateGameDto updateGameDto) => {
+    var index = gameStores.FindIndex(game => game.Id == id);
+    
+
+    gameStores[index] = new GameDto(
+        id,
+        updateGameDto.Name,
+        updateGameDto.Genre,
+        updateGameDto.Price,
+        updateGameDto.ReleaseDate
+    );
+
+    return Results.NoContent();
+});
+
+
+
+//home page
+app.MapGet("/", () => "Welcome to video games");
 
 app.Run();
