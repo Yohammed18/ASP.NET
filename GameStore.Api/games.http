@@ -1,3 +1,4 @@
+
 GET http://localhost:5176/games
 
 ### This is use as a seperater to have mulitple request in the same file.
@@ -5,23 +6,31 @@ GET http://localhost:5176/games/2
 
 
 ### create a game
-POST http://localhost:5176/create
+POST http://localhost:5176/games/create
 Content-Type: application/json
 
 {
-    "name": "Minecraf",
-    "genre": "",
-    "price":"19.99",
+    "name": "Tomb Rider",
+    "genre": "Combat",
+    "price":"29.99",
     "releaseDate":"2011-11-18"
 }
 
 ### update a game from the game list
-PUT http://localhost:5176/games/update/1
+PUT http://localhost:5176/games/update/2
 Content-Type: application/json
 
 {
-    "name": "COD (Call of Duty)",
-    "genre": "Combat",
-    "price": 199.99,
-    "releaseDate": "1990-05-19"
+    "name": "The Witcher 5: Wild Hunt",
+    "genre": "Action RPG",
+    "price": 49.99,
+    "releaseDate": "2015-05-19"
 }
+
+
+### Delete a game
+DELETE http://localhost:5176/games/delete/6
+
+
+### Not found
+GET http://localhost:5176/games/10
